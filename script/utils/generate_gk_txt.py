@@ -8,7 +8,7 @@
         
         - gold_keys_txt:    absolute path to .txt file to generate.
 '''
-def generate_gk_file(corpus_dir_xml, gold_keys_txt):
+def generate_gk_txt(corpus_dir_xml, gold_keys_txt):
     id_list = []
     lemmas_list = []
     with open(corpus_dir_xml, "r") as file:
