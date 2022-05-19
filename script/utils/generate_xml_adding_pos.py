@@ -124,6 +124,9 @@ def write_concept(arco_title, arco_concept, arco_concepts_instances_txt):
         t = t.replace(")", " )")
         t = t.replace(".", " .")
         t = t.replace(",", " ,")
+        t = t.replace("\"", " \"")
+        t = t.replace("<", " <")
+        t = t.preplace(">", " >")
         if " " in t:
             t = t.split()
             for r in t:
