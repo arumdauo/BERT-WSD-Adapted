@@ -1,8 +1,10 @@
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from pathlib import Path
 import spacy
 import random
+import argparse
 
 '''
     Generates an .xml file (corresponding to the sense-annotated data) 
@@ -16,9 +18,39 @@ import random
         
         - random_num:                     the number of ArCo instances to encode in the .xml file.
 '''
-def generate_xml_adding_pos(arco_concepts_instances_txt, corpus_dir_xml, random_num): 
+def main(): 
     
-    arco_concepts_list = create_random_concepts_list(arco_concepts_instances_txt, random_num)
+    parser = argparse.ArgumentParser()
+
+    # Required parameters
+    parser.add_argument(
+        "--arco_concepts_instances_txt",
+        type = str,
+        required = True,
+        help = "Path to file arco_getty_aat_3.txt"
+               "containing all the ArCo entities generating"
+               "ambiguos links to AAT concepts."
+    )
+    parser.add_argument(
+        "--corpus_dir_xml_file",
+        type = str,
+        required = True,
+        help = "Path to .xml file to generate"
+    )
+    parser.add_argument(
+        "--random_number",
+        type = int,
+        required = True,
+        help = "Number of instances to encode."
+             
+    )
+    args = parser.parse_args()
+
+    arco_concepts_instances = Path(args.arco_concepts_instances_txt)
+    corpus_dir_xml = Path(args.corpus_dir_xml_file)
+    random_num = args.random_number
+    
+    arco_concepts_list = create_random_concepts_list(arco_concepts_instances, random_num)
     arco_titles_list = create_arco_titles_list(arco_concepts_list)
     arco_concepts_for_output_list = create_arco_concepts_for_output_list(arco_concepts_list)
     initial_text = write_initial_text()
@@ -26,7 +58,7 @@ def generate_xml_adding_pos(arco_concepts_instances_txt, corpus_dir_xml, random_
     for a_t, a_c in zip(arco_titles_list, arco_concepts_for_output_list):
         if "Empty" in a_t:
             continue
-        concept_text = write_concept(a_t, a_c, arco_concepts_instances_txt)
+        concept_text = write_concept(a_t, a_c, arco_concepts_instances)
         concepts_text_list.append(concept_text)
     write_xml(initial_text, concepts_text_list, corpus_dir_xml)
     
@@ -244,6 +276,8 @@ def add_articles_after_dash(input_string):
                     input_string.insert(i+1, "le")
                 elif word_after_dash[-1] == "i":
                     input_string.insert(i+1, "i")
-    return input_string   
-    
-    
+    return input_string  
+
+
+if __name__ == '__main__':
+    main()
