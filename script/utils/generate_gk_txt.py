@@ -1,3 +1,5 @@
+from pathlib import Path
+import argparse
 
 '''
     Generates a .txt file (corresponding to gold keys of the sense-annotated data 
@@ -8,7 +10,28 @@
         
         - gold_keys_txt:    absolute path to .txt file to generate.
 '''
-def generate_gk_txt(corpus_dir_xml, gold_keys_txt):
+def main():
+    
+    parser = argparse.ArgumentParser()
+
+    # Required parameters
+    parser.add_argument(
+        "--corpus_dir_xml_file",
+        type = str,
+        required = True,
+        help = "Path to .xml file to generated"
+               "in generate_xml_adding_pos.py"
+    )
+    parser.add_argument(
+        "--gold_keys_txt_file",
+        type = str,
+        required = True,
+        help = "Path to .txt file to generate"
+    )
+    args = parser.parse_args()
+    corpus_dir_xml = Path(args.corpus_dir_xml_file)
+    gold_keys_txt = Path(args.gold_keys_txt_file)
+    
     id_list = []
     lemmas_list = []
     with open(corpus_dir_xml, "r") as file:
@@ -31,5 +54,7 @@ def generate_gk_txt(corpus_dir_xml, gold_keys_txt):
         for l_id, l_lemma in zip(id_list, lemmas_list):
             text += l_id + " " + l_lemma + "%" + "\n"
         file.write(text)
+        
+if __name__ == '__main__':
+    main()
             
-                
